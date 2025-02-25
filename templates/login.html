@@ -1,0 +1,30 @@
+{% include 'public_header.html' %}
+
+<div style="margin-bottom: 1em; background: url('/static/assets/img/inter.jpg'); height: 300px; width: 100%; background-size: cover;">
+</div>
+
+<center>
+    <h5 class="d-inline-block text-primary text-uppercase border-bottom border-5" style="border-color: rgba(256, 256, 256, .3) !important;"></h5>
+
+    <h2 style="color: white">Login</h2>
+
+    <form method="post" id="login" action="#" enctype="multipart/form-data">
+        <table class="table animate__animated animate__fadeInUp" style="width: 500px; color: black; background-color: rgba(255, 255, 255, 0.5);">
+            <tr>
+                <th>Username</th>
+                <td><input type="text" name="uname" class="form-control" required></td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td><input type="password" name="pwd" class="form-control" required></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" name="submit" value="LOGIN" class="btn btn-danger">
+                </td>
+            </tr>
+        </table>
+    </form>
+</center>
+
+{% include 'footer.html' %}
