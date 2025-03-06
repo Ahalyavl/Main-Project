@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --info-color: #36b9cc;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --dark-color: #5a5c69;
+            --light-color: #f8f9fc;
+            --sidebar-width: 250px;
+            --sidebar-collapsed-width: 80px;
+        }
+        
+        body {
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--light-color);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            margin: 0;
+        }
+        
+        /* Sidebar Styling */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--primary-color) 0%, #224abe 100%);
+            color: white;
+            padding-top: 20px;
+            position: fixed;
+            height: 100%;
+            transition: all 0.3s;
+            z-index: 100;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+        
+        .sidebar-brand {
+            padding: 1.5rem 1rem;
+            text-align: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-nav {
+            padding-left: 0;
+            list-style: none;
+            margin-top: 1rem;
+        }
+        
+        .sidebar-nav li {
+            position: relative;
+            margin-bottom: 0.25rem;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            transition: 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-nav a i {
+            margin-right: 0.75rem;
+            width: 1.25rem;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid #fff;
+        }
+
+        .sidebar-nav a.active {
+            font-weight: 600;
+        }
+
+        /* Content Area */
+        .content {
+            margin-left: var(--sidebar-width);
+            padding: 1.5rem;
+            width: calc(100% - var(--sidebar-width));
+            transition: all 0.3s;
+        }
+
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            padding: 0.75rem 1.25rem;
+        }
+
+        .navbar-search {
+            width: 25rem;
+            max-width: 100%;
+        }
+
+        .search-input {
+            border-radius: 2rem;
+            padding-left: 2.5rem;
+            background-color: #f8f9fc;
+            border: 1px solid #e3e6f0;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 0.75rem;
+            color: #d1d3e2;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        /* Dashboard Cards */
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 2rem 0 rgba(58, 59, 69, 0.15);
+        }
+
+        .card-stats {
+            border-left: 0.25rem solid;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem;
+        }
+
+        .card-primary { border-left-color: var(--primary-color); }
+        .card-success { border-left-color: var(--secondary-color); }
+        .card-warning { border-left-color: var(--warning-color); }
+        .card-danger { border-left-color: var(--danger-color); }
+
+        .stats-icon {
+            font-size: 2rem;
+            opacity: 0.3;
+        }
+
+        .stats-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #5a5c69;
+            margin-bottom: 0.25rem;
+        }
+
+        .stats-number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #5a5c69;
+            margin: 0;
+        }
+
+        /* Charts Container */
+        .chart-container {
+            background-color: #fff;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #5a5c69;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e3e6f0;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 250px !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .navbar-search {
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-laugh-wink"></i>
+            <span>Admin Panel</span>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="admin_home" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="admin_manage_blogs"><i class="fas fa-blog"></i> Blogs</a></li>
+            <li><a href="admin_view_customers"><i class="fas fa-users"></i> Customers</a></li>
+            <li><a href="admin_manage_contractor"><i class="fas fa-hard-hat"></i> Contractors</a></li>
+            <li><a href="admin_view_shop_row_matiriels"><i class="fas fa-boxes"></i> Raw Materials</a></li>
+            <li><a href="admin_view_feedback"><i class="fas fa-comment"></i> Feedback</a></li>
+            <li><a href="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Navbar -->
+        <nav class="navbar d-flex justify-content-between">
+            <div class="d-flex align-items-center">
+                <button id="sidebarToggle" class="btn btn-link d-md-none">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="position-relative navbar-search d-none d-md-block">
+                    <input type="text" class="form-control search-input" placeholder="Search for...">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+            </div>
+            <div class="user-info">
+                <!-- <img src="/api/placeholder/40/40" alt="User Avatar"> -->
+                <span>Admin</span>
+            </div>
+        </nav>
+
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h2 class="h3 mb-0 text-gray-800">Dashboard Overview</h2>
+            <!-- <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
+            </a> -->
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row">
+            <!-- Customers Count -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card">
+                    <div class="card-stats card-primary">
+                        <div>
+                            <div class="stats-title">Customers</div>
+                            <div class="stats-number">{{ customerscount }}</div>
+                        </div>
+                        <i class="fas fa-users stats-icon text-primary"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contractors Count -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card">
+                    <div class="card-stats card-success">
+                        <div>
+                            <div class="stats-title">Contractors</div>
+                            <div class="stats-number">{{ contractorcount }}</div>
+                        </div>
+                        <i class="fas fa-hard-hat stats-icon text-success"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Shops Count -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card">
+                    <div class="card-stats card-warning">
+                        <div>
+                            <div class="stats-title">Shops</div>
+                            <div class="stats-number">{{ shopcount }}</div>
+                        </div>
+                        <i class="fas fa-store stats-icon text-warning"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Daily Sales Count -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card">
+                    <div class="card-stats card-danger">
+                        <div>
+                            <div class="stats-title">Designers</div>
+                            <div class="stats-number">{{ designers }}</div>
+                        </div>
+                        <i class="fas fa-chart-bar stats-icon text-danger"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Charts Section -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-bar mr-1"></i> Daily Sales Overview
+                    </div>
+                    <canvas id="dailySalesChart"></canvas>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="chart-container">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-line mr-1"></i> Work Progress Tracking
+                    </div>
+                    <canvas id="workUpdationChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activities Section -->
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h6 class="m-0 font-weight-bold text-primary">Recent Activities</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="activity-item d-flex align-items-center py-2">
+                            <div class="bg-primary rounded-circle p-2 mr-3 text-white">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div>
+                                <div class="small text-gray-500">March 3, 2025</div>
+                                <span>New customer registered</span>
+                            </div>
+                        </div>
+                        <div class="activity-item d-flex align-items-center py-2">
+                            <div class="bg-success rounded-circle p-2 mr-3 text-white">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div>
+                                <div class="small text-gray-500">March 2, 2025</div>
+                                <span>New sale recorded</span>
+                            </div>
+                        </div>
+                        <div class="activity-item d-flex align-items-center py-2">
+                            <div class="bg-info rounded-circle p-2 mr-3 text-white">
+                                <i class="fas fa-comment"></i>
+                            </div>
+                            <div>
+                                <div class="small text-gray-500">March 1, 2025</div>
+                                <span>New feedback received</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h6 class="m-0 font-weight-bold text-primary">Tasks</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="task-item d-flex align-items-center justify-content-between py-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="task1">
+                                <label class="form-check-label" for="task1">Review new customers</label>
+                            </div>
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        </div>
+                        <div class="task-item d-flex align-items-center justify-content-between py-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="task2">
+                                <label class="form-check-label" for="task2">Update inventory</label>
+                            </div>
+                            <span class="badge bg-danger text-white">Urgent</span>
+                        </div>
+                        <div class="task-item d-flex align-items-center justify-content-between py-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="task3" checked>
+                                <label class="form-check-label" for="task3">Approve contractor requests</label>
+                            </div>
+                            <span class="badge bg-success text-white">Completed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Sidebar Toggle
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('show');
+        });
+
+        // Chart.js Configuration with better styling
+        Chart.defaults.font.family = "'Nunito', 'Segoe UI', Roboto, Arial, sans-serif";
+        Chart.defaults.color = "#5a5c69";
+        
+        // Configure Sales Chart
+        var ctx1 = document.getElementById('dailySalesChart').getContext('2d');
+        var dailySalesChart = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: {{ total_dailysale | map(attribute='date_time') | list | tojson }},
+                datasets: [{
+                    label: 'Daily Sales',
+                    data: {{ total_dailysale | map(attribute='total') | list | tojson }},
+                    backgroundColor: 'rgba(78, 115, 223, 0.6)',
+                    borderColor: 'rgba(78, 115, 223, 1)',
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    maxBarThickness: 25
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: "#fff",
+                        titleColor: "#5a5c69",
+                        bodyColor: "#5a5c69",
+                        borderColor: "#dddfeb",
+                        borderWidth: 1,
+                        padding: 10,
+                        displayColors: false,
+                        mode: 'index',
+                        intersect: false
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: "rgba(0, 0, 0, 0.05)"
+                        }
+                    }
+                }
+            }
+        });
+
+        // Configure Work Progress Chart
+        var ctx2 = document.getElementById('workUpdationChart').getContext('2d');
+        var workUpdationChart = new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: {{ dailyuroupdate | map(attribute='update_date') | list | tojson }},
+                datasets: [{
+                    label: 'Work Progress (%)',
+                    data: {{ dailyuroupdate | map(attribute='percentage') | list | tojson }},
+                    backgroundColor: 'rgba(28, 200, 138, 0.1)',
+                    borderColor: 'rgba(28, 200, 138, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgba(28, 200, 138, 1)',
+                    pointBorderColor: '#fff',
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: "#fff",
+                        titleColor: "#5a5c69",
+                        bodyColor: "#5a5c69",
+                        borderColor: "#dddfeb",
+                        borderWidth: 1,
+                        padding: 10,
+                        displayColors: false
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: {
+                            color: "rgba(0, 0, 0, 0.05)"
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
