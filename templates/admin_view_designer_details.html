@@ -1,0 +1,191 @@
+{% include 'admin_header.html' %}
+
+<div style="margin-bottom: 1em; background:url('/static/assets/img/cons.jpg'); height: 300px; width: 100%; background-size: cover; background-position: center;"></div>
+
+<center>
+  <form method="post">
+    <h3 class="page-title">Contractor Details</h3>
+
+    <!-- Search Bar for Contractor Name and Place -->
+    <div class="search-container">
+      <input type="text" id="nameSearch" onkeyup="filterTable()" placeholder="Search by Name" class="form-control search-input">
+      <input type="text" id="placeSearch" onkeyup="filterTable()" placeholder="Search by Place" class="form-control search-input">
+    </div>
+
+    <!-- Contractor Table -->
+    <div class="table-container">
+      <table id="contractorTable">
+        <thead>
+          <tr>
+            <th>Index</th>
+            <th>Designer Name</th>
+            <th>Place</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Aadhaar No</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in data['view'] %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ i['d_fname'] }} {{ i['d_lname'] }}</td>
+            <td>{{ i['d_place'] }}</td>
+            <td>{{ i['d_phone'] }}</td>
+            <td>{{ i['d_email'] }}</td>
+            <td>{{ i['d_aadhar'] }}</td>
+            
+            <td>
+              <!-- <a href="admin_view_con_design?con_id={{ i['contractor_id'] }}&log_id={{ i['login_id'] }}" class="btn btn-info">View Designs</a> -->
+			  <a href="admin_vew_designe_details?login_id={{ i['login_id'] }}" class="btn btn-info">View Designs</a>
+            </td>
+            
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </form>
+</center>
+
+{% include 'footer.html' %}
+
+<!-- Improved CSS -->
+<style>
+  /* Page Title */
+  .page-title {
+    font-size: 28px;
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  /* Search Bar */
+  .search-container {
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+    margin-bottom: 20px;
+  }
+
+  .search-input {
+    width: 48%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+
+  /* Table Container */
+  .table-container {
+    width: 90%;
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Table Styling */
+  #contractorTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+  }
+
+  #contractorTable th,
+  #contractorTable td {
+    padding: 15px;
+    text-align: left;
+    font-size: 16px;
+    border-bottom: 1px solid #f2f2f2;
+  }
+
+  #contractorTable th {
+    background-color: #f7f7f7;
+    font-weight: bold;
+  }
+
+  #contractorTable tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  #contractorTable tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  /* Button Styling */
+  .btn {
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    font-size: 14px;
+    display: inline-block;
+    margin-right: 8px;
+    cursor: pointer;
+  }
+
+  .btn-info {
+    background-color: #17a2b8;
+  }
+
+  .btn-info:hover {
+    background-color: #138496;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+  }
+
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+
+  /* Responsive Table */
+  @media screen and (max-width: 768px) {
+    .search-container {
+      width: 90%;
+    }
+
+    #contractorTable th,
+    #contractorTable td {
+      padding: 10px;
+    }
+
+    .search-input {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+</style>
+
+<script>
+// Function to filter the table based on the search inputs
+function filterTable() {
+  var nameInput = document.getElementById("nameSearch").value.toLowerCase();
+  var placeInput = document.getElementById("placeSearch").value.toLowerCase();
+  var table = document.getElementById("contractorTable");
+  var rows = table.getElementsByTagName("tr");
+
+  // Loop through the rows and hide those that don't match the search criteria
+  for (var i = 1; i < rows.length; i++) {
+    var cells = rows[i].getElementsByTagName("td");
+
+    var name = cells[1].textContent.toLowerCase();
+    var place = cells[2].textContent.toLowerCase();
+
+    if (name.indexOf(nameInput) > -1 && place.indexOf(placeInput) > -1) {
+      rows[i].style.display = "";
+    } else {
+      rows[i].style.display = "none";
+    }
+  }
+}
+</script>
