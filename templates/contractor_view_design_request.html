@@ -1,0 +1,34 @@
+{% include 'contractor_header.html' %}
+<div style="margin-bottom: 1em;background:url('/static/assets/img/inter.jpg') ; height: 300px; width: 100%; background-size: cover;" >
+  </div>
+<center>
+<form method="post">
+	<h3>Design Request</h3>
+	<table class="table table-hover" style="width: 850px;">
+		<tr>
+			<th>Index</th>
+			<th>Customer</th>
+			<th>Place</th>
+			<th>Phone</th>
+			<th>Request Date</th>
+			<th>Design Name</th>
+			<th>Image</th>
+			<th></th>
+		</tr>
+		{% for i in data['view'] %}
+		<td>{{loop.index}}</td>
+		<td>{{i['fname']}} {{i['lname']}}</td>
+		<td>{{i['place']}}</td>
+		<td>{{i['phone']}}</td>
+		<td>{{i['req_date']}}</td>
+		<td>{{i['designname']}}</td>
+		<td><a href="/{{i['path']}}"><img src="/{{i['path']}}" width="100" height="100" alt="Designer Image"></a></td>
+
+		<td><a href="contractor_send_estimate?dr_id={{i['drequest_id']}}" class="btn btn-info">Estimate</a></td>
+	</tr>
+		{% endfor %}
+	</table>
+	
+</form>
+</center>
+{% include 'footer.html' %}
