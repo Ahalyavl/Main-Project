@@ -1,0 +1,66 @@
+{% include 'contractor_header.html' %}
+
+<div style="margin-bottom: 1em; background:url('/static/assets/img/inter.jpg'); height: 300px; width: 100%; background-size: cover;">
+</div>
+
+<center>
+    <form method="post" style="padding-left: 150px; padding-top: 50px;">
+        <h1 style="color: white; font-family: 'Arial', sans-serif; text-align: center;">ENTER TEST RESULTS</h1>
+        <table class="table blur-table" style="width: 80%; margin-top: 20px; background-color: rgba(255, 255, 255, 0.8); border-radius: 10px; padding: 20px;">
+            <tr>
+                <th style="text-align: left; padding: 10px; font-size: 1.1em; color: #333;">Material Cost</th>
+                <td style="padding: 10px;">
+                    <input type="text" required class="form-control" name="Material_Cost" pattern="\d+" title="Please enter digits only" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd; font-size: 1em;" />
+                </td>
+            </tr>
+            <tr>
+                <th style="text-align: left; padding: 10px; font-size: 1.1em; color: #333;">Labor Cost</th>
+                <td style="padding: 10px;">
+                    <input type="text" required class="form-control" name="Labor_Cost" pattern="\d+" title="Please enter digits only" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd; font-size: 1em;" />
+                </td>
+            </tr>
+            <tr>
+                <th style="text-align: left; padding: 10px; font-size: 1.1em; color: #333;">Profit Rate</th>
+                <td style="padding: 10px;">
+                    <input type="text" required class="form-control" name="Profit_Rate" pattern="\d+" title="Please enter digits only" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd; font-size: 1em;" />
+                </td>
+            </tr>
+            <tr>
+                <th style="text-align: left; padding: 10px; font-size: 1.1em; color: #333;">Discount Markup</th>
+                <td style="padding: 10px;">
+                    <input type="text" required class="form-control" name="Discount_or_Markup" title="Please enter digits only" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd; font-size: 1em;" />
+                </td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2" style="padding-top: 20px;">
+                    <input type="submit" class="btn btn-success" name="submit" value="RESULT" style="background-color: #13C5DD; color: white; padding: 12px 20px; font-size: 1.1em; border-radius: 5px; cursor: pointer;" />
+                </td>
+            </tr>
+        </table>
+        
+        <table style="width: 80%; margin-top: 30px; background-color: rgba(255, 255, 255, 0.9); border-radius: 10px; border: 1px solid #ddd;">
+            <thead>
+                <tr>
+                    <th style="padding: 10px; background-color: #13C5DD; color: white;">Material Cost</th>
+                    <th style="padding: 10px; background-color: #13C5DD; color: white;">Labor Cost</th>
+                    <th style="padding: 10px; background-color: #13C5DD; color: white;">Profit Rate</th>
+                    <th style="padding: 10px; background-color: #13C5DD; color: white;">Discount Markup</th>
+                    <th style="padding: 10px; background-color: #13C5DD; color: white;">Total Estimate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in data['view'] %}
+                <tr style="text-align: center; background-color: #f9f9f9; font-size: 1.1em;">
+                    <td> {{i['material_cost']}}</td>
+                    <td> {{i['labor_cost']}}</td>
+                    <td> {{i['profit_rate']}}</td>
+                    <td>{{i['discount_markup']}}</td>
+                    <td>{{i['total_cost']}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
+</center>
+
+{% include "footer.html" %}
