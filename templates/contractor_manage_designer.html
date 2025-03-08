@@ -1,0 +1,300 @@
+{% include 'contractor_header.html' %}
+<script src="https://cdn.validy.io/validy.min.js"></script>
+
+<div style="margin-bottom: 1em; background:url('/static/assets/img/inter.jpg') ; height: 300px; width: 100%; background-size: cover;"></div>
+
+<center>
+  <br><br>
+
+  <!-- Card container to wrap the registration form -->
+  <div class="card custom-card">
+    <div class="card-body">
+      <h2 class="card-title text-center">Designer Details</h2>
+
+      <!-- Registration form inside the card body -->
+      <form method="post" enctype="multipart/form-data">
+        {% if data['up'] %}
+        <table class="table table-form">
+            <tr>
+              <th>First Name</th>
+              <td><input type="text" name="fname" value="{{data['up'][0]['d_fname']}}" pattern="[a-zA-Z\s]{0,30}" title="Enter Alphabets Only" class="form-control" required=""></td>
+            </tr>
+            <tr>
+              <th>Last Name</th>
+              <td><input type="text" name="lname" value="{{data['up'][0]['d_lname']}}" pattern="[a-zA-Z\s]{0,30}" title="Enter Alphabets Only" class="form-control" required=""></td>
+            </tr>
+            <tr>
+              <th>Place</th>
+              <td><input type="text" name="place" value="{{data['up'][0]['d_place']}}" required pattern="[a-zA-Z\s]{0,30}" title="Enter Alphabets Only" class="form-control"></td>
+            </tr>
+            <tr>
+              <th>Phone</th>
+              <td><input type="text" name="phone" value="{{data['up'][0]['d_phone']}}" minlength="10" maxlength="10" pattern="[0-9]{10}" required="" class="form-control"></td>
+            </tr>
+            <tr>
+              <th>Email</th>
+              <td><input type="email" name="email" value="{{data['up'][0]['d_email']}}" required="" class="form-control"></td>
+            </tr>
+            <tr>
+              <th>Aadhar Number</th>
+              <td><input type="text" name="aadhar" value="{{data['up'][0]['d_aadhar']}}" required="" class="form-control"></td>
+            </tr>
+            <tr>
+              <td colspan="2" align="center">
+                <input type="submit" name="update" value="Update" class="btn btn-primary">
+              </td>
+            </tr>
+          </table>
+        {% else %}
+        <table class="table table-form">
+          <tr>
+            <th>First Name</th>
+            <td><input type="text" name="fname" pattern="[a-zA-Z\s]{0,30}" title="Enter Alphabets Only" class="form-control" required=""></td>
+          </tr>
+          <tr>
+            <th>Last Name</th>
+            <td><input type="text" name="lname" pattern="[a-zA-Z\s]{0,30}" title="Enter Alphabets Only" class="form-control" required=""></td>
+          </tr>
+          <tr>
+            <th>Place</th>
+            <td><input type="text" name="place" required pattern="[a-zA-Z\s]{0,30}" title="Enter Alphabets Only" class="form-control"></td>
+          </tr>
+          <tr>
+            <th>Phone</th>
+            <td><input type="text" name="phone" minlength="10" maxlength="10" pattern="[0-9]{10}" required="" class="form-control"></td>
+          </tr>
+          <tr>
+            <th>Email</th>
+            <td><input type="email" name="email" required="" class="form-control"></td>
+          </tr>
+          <tr>
+            <th>Aadhar Number</th>
+            <td>
+              <input type="text" name="aadhar" maxlength="16" pattern="[0-9]{16}" title="Enter a valid 16-digit Aadhar number" required="" class="form-control">
+            </td>
+          </tr>
+          
+          <tr>
+            <th>Username</th>
+            <td>
+                <input type="text" name="uname" required class="form-control" 
+                       pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" 
+                       placeholder="Enter your email" oninput="validateUsername()">
+                <small id="usernameError" class="form-text text-danger" style="display: none;">
+                    Please enter a valid email address.
+                </small>
+            </td>
+        </tr>
+        <tr>
+            <th>Password</th>
+            <td>
+                <input type="password" name="passw" id="passw" required class="form-control" 
+                       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{7,}$" 
+                       placeholder="Enter your password" oninput="validatePassword()">
+                <small id="passwordError" class="form-text text-danger" style="display: none;">
+                    Password must be at least 7 characters long, contain at least one uppercase letter, one lowercase letter, and one digit.
+                </small>
+            </td>
+        </tr>
+          <tr>
+            <td colspan="2" align="center">
+              <input type="submit" name="manage" value="REGISTER" class="btn btn-success">
+            </td>
+          </tr>
+        </table>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+  <br><br>
+  <br><br>
+  <h2 class="card-title text-center">Designer Details</h2>
+  <!-- Search Inputs in one row -->
+  <div class="search-container" style="display: flex; justify-content: space-between; width: 80%; margin-bottom: 1em;">
+    <input type="text" id="fnameSearch" onkeyup="filterTable()" placeholder="Search by First Name" class="form-control" style="width: 30%;">
+    <input type="text" id="placeSearch" onkeyup="filterTable()" placeholder="Search by Place" class="form-control" style="width: 30%;">
+  </div>
+
+  <div class="card custom-card">
+    <div class="card-body">
+      
+
+      <table class="table table-striped" id="designerTable">
+        <thead>
+          <tr>
+            <th>Designer Name</th>
+            <th>Place</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Aadhar</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in data['view'] %}
+          <tr>
+            <td>{{i['d_fname']}} {{i['d_lname']}}</td>
+            <td>{{i['d_place']}}</td>
+            <td>{{i['d_phone']}}</td>
+            <td>{{i['d_email']}}</td>
+            <td>{{i['d_aadhar']}}</td>
+            <td>
+              <a href="?action=update&login_id={{i['login_id']}}" class="btn btn-info btn-sm">Update</a>
+              <a href="?action=delete&login_id={{i['login_id']}}" class="btn btn-danger btn-sm">Delete</a>
+              <a href="contractor_view_desiners_design?login_id={{i['login_id']}}" class="btn btn-warning ">Designs</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</center>
+
+{% include 'footer.html' %}
+
+<!-- Adding enhanced card view CSS -->
+<style>
+  .custom-card {
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    padding: 25px;
+    margin-top: 20px;
+  }
+
+  .card-title {
+    font-size: 28px;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border-top: 1px solid #ddd;
+  }
+
+  .table th {
+    background-color: #f1f1f1;
+    color: #333;
+  }
+
+  .table-striped tbody tr:nth-child(odd) {
+    background-color: #f8f8f8;
+  }
+
+  .form-control {
+    border-radius: 5px;
+    box-shadow: none;
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .btn-info {
+    background-color: #17a2b8;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btn-info:hover {
+    background-color: #138496;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+
+  .btn-success {
+    background-color: #28a745;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btn-success:hover {
+    background-color: #218838;
+  }
+
+  .table td a {
+    margin-right: 5px;
+  }
+</style>
+
+<script>
+// Function to filter the table based on the search inputs
+function filterTable() {
+  var fnameInput = document.getElementById("fnameSearch").value.toLowerCase();
+  var placeInput = document.getElementById("placeSearch").value.toLowerCase();
+  var table = document.getElementById("designerTable");
+  var rows = table.getElementsByTagName("tr");
+
+  // Loop through the rows and hide those that don't match the search criteria
+  for (var i = 1; i < rows.length; i++) {
+    var cells = rows[i].getElementsByTagName("td");
+
+    var fname = cells[0].textContent.toLowerCase();
+    var place = cells[1].textContent.toLowerCase();
+
+    if (fname.indexOf(fnameInput) > -1 && place.indexOf(placeInput) > -1) {
+      rows[i].style.display = "";
+    } else {
+      rows[i].style.display = "none";
+    }
+  }
+}
+</script>
+
+
+<script>
+  // Validate the username (email)
+  function validateUsername() {
+      var username = document.querySelector("[name='uname']").value;
+      var usernameError = document.getElementById("usernameError");
+
+      // Regular expression for validating email
+      var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+      // Check if the username matches the email format
+      if (emailRegex.test(username)) {
+          usernameError.style.display = "none";  // Hide error message if valid
+      } else {
+          usernameError.style.display = "block";  // Show error message if invalid
+      }
+  }
+
+  // Validate the password
+  function validatePassword() {
+      var password = document.getElementById("passw").value;
+      var passwordError = document.getElementById("passwordError");
+
+      // Regular expression for password validation
+      var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{7,}$/;
+
+      // Check if the password matches the regular expression
+      if (passwordRegex.test(password)) {
+          passwordError.style.display = "none";  // Hide error message if valid
+      } else {
+          passwordError.style.display = "block";  // Show error message if invalid
+      }
+  }
+</script>
