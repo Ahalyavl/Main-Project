@@ -1,0 +1,66 @@
+{% include 'contractor_header.html' %}
+
+<div style="margin-bottom: 1em; background: url('/static/assets/img/inter.jpg'); height: 300px; width: 100%; background-size: cover;">
+</div>
+
+<center>
+	<h3>Booking Details Of Design And Plan</h3>
+
+	<!-- Search Inputs in one row (only Customer Name and Design Name) -->
+	<div class="search-container" style="display: flex; justify-content: space-between; width: 60%; margin-bottom: 1em;">
+		<input type="text" id="designNameSearch" onkeyup="filterTable()" placeholder="Search by Design Name" class="form-control" style="width: 45%;">
+		<input type="text" id="customerNameSearch" onkeyup="filterTable()" placeholder="Search by Customer Name" class="form-control" style="width: 45%;">
+	</div>
+
+	<!-- Table showing existing designs -->
+	<table class="table table-bordered" id="designTable">
+		<tr>
+			<th>Index</th>
+			<th>Customer Name</th>
+			<th>Design Name</th>
+			<th>Design Details</th>
+			<th>Design Image</th>
+            <th>Row Materials</th>
+			<th>Work Update</th>
+		</tr>
+		{% for i in data['view'] %}
+		<tr>
+			<td>{{loop.index}}</td>
+			<td>{{i['fname']}} {{i['lname']}}</td>
+			<td>{{i['designname']}}</td>
+			<td>{{i['details']}}</td>
+			<td><a href="/{{i['design_image']}}"><img src="/{{i['design_image']}}" width="100" height="100" alt="Designer Image"></a></td>
+			<td><a href="contractor_raw_metirial_forusers?dr_id={{i['drequest_id']}}" class="btn btn-warning">Row Materials</a></td>
+			<td><a href="contractor_update_work_details?dr_id={{i['drequest_id']}}" class="btn btn-warning">Update Work</a></td>
+		
+		</tr>
+		{% endfor %}
+	</table>
+</center>
+
+<script>
+// Function to filter the table based on the search inputs (only Customer Name and Design Name)
+function filterTable() {
+  var designNameInput = document.getElementById("designNameSearch").value.toLowerCase();
+  var customerNameInput = document.getElementById("customerNameSearch").value.toLowerCase();
+  var table = document.getElementById("designTable");
+  var rows = table.getElementsByTagName("tr");
+
+  // Loop through the rows and hide those that don't match the search criteria
+  for (var i = 1; i < rows.length; i++) {
+    var cells = rows[i].getElementsByTagName("td");
+
+    var designName = cells[3].textContent.toLowerCase();
+    var customerName = cells[1].textContent.toLowerCase();
+
+    if (designName.indexOf(designNameInput) > -1 &&
+        customerName.indexOf(customerNameInput) > -1) {
+      rows[i].style.display = "";
+    } else {
+      rows[i].style.display = "none";
+    }
+  }
+}
+</script>
+
+{% include 'footer.html' %}
