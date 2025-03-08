@@ -1,0 +1,151 @@
+{% include 'public_header.html' %}
+<script src="https://cdn.validy.io/validy.min.js"></script>
+
+<div style="margin-bottom: 1em; background:url('/static/assets/img/inter.jpg') ; height: 300px; width: 100%; background-size: cover;"></div>
+
+<center>
+  <br><br>
+
+  <!-- Card container to wrap the registration form -->
+  <div class="card" style="max-width: 800px; margin-top: -50px;">
+    <div class="card-body">
+      <h2 class="card-title text-center">Contractor REGISTRATION</h2>
+
+      <!-- Registration form inside the card body -->
+      <form method="post" enctype="multipart/form-data">
+        <table class="table" style="width: 100%; color: black;">
+          <tr>
+            <th>First Name</th>
+            <td><input type="text" name="fname" pattern="[a-zA-Z\s]{0,30}" title="Enter Alphabets Only" class="form-control" required=""></td>
+          </tr>
+          <tr>
+            <th>Last Name</th>
+            <td><input type="text" name="lname" pattern="[a-zA-Z\s]{0,30}" title="Enter Alphabets Only" class="form-control" required=""></td>
+          </tr>
+          <tr>
+            <th>Place</th>
+            <td><input type="text" name="place" required pattern="[a-zA-Z\s]{0,30}" title="Enter Alphabets Only" class="form-control"></td>
+          </tr>
+          <tr>
+            <th>Phone</th>
+            <td><input type="text" name="phone" minlength="10" maxlength="10" pattern="[0-9]{10}" required="" class="form-control"></td>
+          </tr>
+          <tr>
+            <th>Email</th>
+            <td><input type="email" name="email" required="" class="form-control"></td>
+          </tr>
+          <tr>
+            <th>Aadhar Number</th>
+            <td>
+                <input type="text" name="aadhar" required="" class="form-control" 
+                       pattern="^\d{16}$" maxlength="16" title="Please enter a 16-digit Aadhar number" />
+            </td>
+        </tr>
+        
+          <tr>
+            <th>Username</th>
+            <td>
+                <input type="text" name="uname" required class="form-control" 
+                       pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" 
+                       placeholder="Enter your email" oninput="validateUsername()">
+                <small id="usernameError" class="form-text text-danger" style="display: none;">
+                    Please enter a valid email address.
+                </small>
+            </td>
+        </tr>
+        <tr>
+            <th>Password</th>
+            <td>
+                <input type="password" name="passw" id="passw" required class="form-control" 
+                       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{7,}$" 
+                       placeholder="Enter your password" oninput="validatePassword()">
+                <small id="passwordError" class="form-text text-danger" style="display: none;">
+                    Password must be at least 7 characters long, contain at least one uppercase letter, one lowercase letter, and one digit.
+                </small>
+            </td>
+        </tr>
+          <tr>
+            <td colspan="2" align="center">
+              <input type="submit" name="manage" value="REGISTER" class="btn btn-info">
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </div>
+</center>
+
+{% include 'footer.html' %}
+
+<!-- Adding card view CSS -->
+<style>
+  .card {
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    padding: 20px;
+    margin-top: 30px;
+  }
+
+  .card-title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .table th, .table td {
+    padding: 10px;
+    text-align: left;
+  }
+
+  .btn-info {
+    background-color: #17a2b8;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btn-info:hover {
+    background-color: #138496;
+  }
+</style>
+
+<script>
+  // Validate the username (email)
+  function validateUsername() {
+      var username = document.querySelector("[name='uname']").value;
+      var usernameError = document.getElementById("usernameError");
+
+      // Regular expression for validating email
+      var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+      // Check if the username matches the email format
+      if (emailRegex.test(username)) {
+          usernameError.style.display = "none";  // Hide error message if valid
+      } else {
+          usernameError.style.display = "block";  // Show error message if invalid
+      }
+  }
+
+  // Validate the password
+  function validatePassword() {
+      var password = document.getElementById("passw").value;
+      var passwordError = document.getElementById("passwordError");
+
+      // Regular expression for password validation
+      var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{7,}$/;
+
+      // Check if the password matches the regular expression
+      if (passwordRegex.test(password)) {
+          passwordError.style.display = "none";  // Hide error message if valid
+      } else {
+          passwordError.style.display = "block";  // Show error message if invalid
+      }
+  }
+</script>
