@@ -1,0 +1,23 @@
+{% include 'admin_header.html' %}
+<div style="margin-bottom: 1em;background:url('/static/assets/img/inter.jpg') ; height: 300px; width: 100%; background-size: cover;" >
+  </div>
+<form method="post">
+	<table class="table table-hover" style="width: 850px;">
+		<tr>
+			<th>Index</th>
+			<th>Metirial</th>
+			<th>Details</th>
+			<th>Rate</th>
+		</tr>
+		{% for i in data['view'] %}
+		<tr>
+			<td>{{loop.index}}</td>
+			<td>{{i['shop']}}</td>
+			<td>{{i['raw_name']}}</td>
+			<td>{{i['raw_details']}}</td>
+			<td>₹{{i['raw_rate']}}</td>
+		</tr>
+		{% endfor %}
+	</table>
+</form>
+{% include 'footer.html' %}
