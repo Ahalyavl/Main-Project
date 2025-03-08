@@ -1,0 +1,45 @@
+{% include 'contractor_header.html' %}
+<div style="margin-bottom: 1em;background:url('/static/assets/img/inter.jpg') ; height: 300px; width: 100%; background-size: cover;" >
+  </div>
+<!-- <div style="margin-bottom: 1em; margin-top: 3em; background:url('/static/assets/img/inter.jpg') ; height: 300px; width: 100%; background-size: cover;" >
+	</div> -->
+
+
+<center>
+<table class="table table-striped" style="width: 1000px;">
+	<h2>Chat Box</h2>
+	{% for i in data['msg'] %}
+
+	{% if i['sender_id']==data['customer'] %}
+	<tr>
+		<td></td>
+		<td align="right"><input type="text" name="" value="{{i['message']}}"></td>
+	</tr>
+
+		{% else%}
+
+		<tr>
+			<td align="left"><input type="text" name="" value="{{i['message']}}"></td>
+			<td></td>
+		</tr>
+	{% endif %}
+	{% endfor %}
+</table>
+</center>
+
+<center>
+<form method="post">
+	<table class="table table-borderless" style="width: 700px;">
+		<tr>
+			<th>Message</th>
+			<td><input type="text" name="messsage" required class="form-control"></td>
+		</tr>
+		<tr>
+					<td align="center" colspan="2"><input type="submit" name="send" value="Send" class="btn btn-outline-success"style="width: 150px;"></td>
+				</tr>
+		
+	</table>
+</center>
+
+</form>
+{% include 'footer.html' %}
