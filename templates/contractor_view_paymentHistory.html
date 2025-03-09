@@ -1,0 +1,167 @@
+{% include 'contractor_header.html' %}
+
+<div style="margin-bottom: 1em; background: url('/static/assets/img/inter.jpg'); height: 300px; width: 100%; background-size: cover;">
+</div>
+
+<center>
+    <h3 class="page-title">Estimate Payment Details</h3>
+
+    <!-- Search Inputs in one row -->
+    <div class="search-container" style="display: flex; justify-content: center; width: 80%; margin-bottom: 1em;">
+        <input type="text" id="categorydate" onkeyup="filterTable()" placeholder="Search by Date" class="form-control search-input">
+    </div>
+
+    <!-- Table showing existing designs -->
+    <table class="table table-bordered" id="designTable">
+        <thead>
+            <tr>
+                <th>Index</th>
+                <th>Date</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in data['view'] %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ i['pay_date'] }}</td>
+                <td>{{ i['pay_amount'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Total amount display -->
+    <div id="totalAmount" class="total-amount">
+        <strong>Total Amount: </strong><span id="totalAmountValue"></span>
+    </div>
+</center>
+
+<br>
+<br>
+
+{% include 'footer.html' %}
+
+<style>
+
+
+/* Title styling */
+.page-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #333;
+}
+
+/* Search container styling */
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1em;
+}
+
+/* Styling for the search input */
+.search-input {
+    width: 30%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s;
+}
+
+.search-input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+/* Table styling */
+table {
+    width: 80%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    font-size: 16px;
+    color: #333;
+}
+
+th {
+    background-color: #4CAF50;
+    color: red;
+}
+
+td {
+    border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Total amount styling */
+.total-amount {
+    width: 80%;
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: red;
+    background-color:rgb(229, 241, 240);
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+</style>
+
+<script>
+// JavaScript to filter table by date
+function filterTable() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("categorydate");
+    filter = input.value.toLowerCase();
+    table = document.getElementById("designTable");
+    tr = table.getElementsByTagName("tr");
+
+    // Loop through all rows and hide those that don't match the search
+    for (i = 1; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[1];  // Search by Date column
+        if (td) {
+            txtValue = td.textContent || td.innerText;
+            if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+}
+
+// JavaScript to calculate and display the total amount
+window.onload = function() {
+    var total = 0;
+    var table = document.getElementById("designTable");
+    var rows = table.getElementsByTagName("tr");
+
+    // Loop through table rows to calculate the total amount
+    for (var i = 1; i < rows.length; i++) {
+        var cells = rows[i].getElementsByTagName("td");
+        if (cells.length > 2) {
+            var amount = parseFloat(cells[2].textContent);  // Amount is in the 3rd column (index 2)
+            if (!isNaN(amount)) {
+                total += amount;
+            }
+        }
+    }
+
+    // Display the total amount
+    document.getElementById("totalAmountValue").textContent = total.toFixed(2); // Display with two decimal places
+};
+</script>
