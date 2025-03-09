@@ -1,0 +1,175 @@
+{% include 'designer_header.html' %}
+
+<div style="margin-bottom: 1em; background:url('/static/assets/img/inter.jpg') ; height: 300px; width: 100%; background-size: cover;"></div>
+
+<center>
+  <br><br>
+
+  <!-- Card container to wrap the registration form -->
+  <div class="card custom-card">
+    <div class="card-body">
+      <h2 class="card-title text-center">Category Details</h2>
+
+      <!-- Registration form inside the card body -->
+      <form method="post" enctype="multipart/form-data">
+        {% if data['up'] %}
+        <table class="table table-form">
+          
+            <tr>
+              <th>Category Name</th>
+              <td><input type="text" name="fname" value="{{data['up'][0]['category_name']}}" pattern="[a-zA-Z\s]{0,30}" title="Enter Alphabets Only" class="form-control" required=""></td>
+            </tr>
+            
+            <tr>
+                <td colspan="2" align="center">
+                  <input type="submit" name="update" value="Update" class="btn btn-success">
+                </td>
+              </tr>
+          </table>
+        {% else %}
+        <table class="table table-form">
+          <tr>
+            <th>Service Name</th>
+            <td>
+                <select name="service_id" class="form-control">
+                    {% for i in data['serviceview'] %}
+                    <option value="{{i['service_id'] }}">{{i['service_name']}}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+          <tr>
+            <th>Category Name</th>
+            <td><input type="text" name="fname" pattern="[a-zA-Z\s]{0,30}" title="Enter Alphabets Only" class="form-control" required=""></td>
+          </tr>
+         
+          
+        
+          <tr>
+            <td colspan="2" align="center">
+              <input type="submit" name="manage" value="REGISTER" class="btn btn-success">
+            </td>
+          </tr>
+        </table>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+
+  <div class="card custom-card">
+    <div class="card-body">
+      <h2 class="card-title text-center">Category Details</h2>
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Category Name</th>
+            
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in data['view'] %}
+          <tr>
+            <td>{{i['category_name']}}</td>
+            
+            <td>
+              <a href="?action=update&category_id={{i['category_id']}}" class="btn btn-info btn-sm">Update</a>
+              <a href="?action=delete&category_id={{i['category_id']}}" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</center>
+
+{% include 'footer.html' %}
+
+<!-- Adding enhanced card view CSS -->
+<style>
+  .custom-card {
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    padding: 25px;
+    margin-top: 20px;
+  }
+
+  .card-title {
+    font-size: 28px;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border-top: 1px solid #ddd;
+  }
+
+  .table th {
+    background-color: #f1f1f1;
+    color: #333;
+  }
+
+  .table-striped tbody tr:nth-child(odd) {
+    background-color: #f8f8f8;
+  }
+
+  .form-control {
+    border-radius: 5px;
+    box-shadow: none;
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .btn-info {
+    background-color: #17a2b8;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btn-info:hover {
+    background-color: #138496;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+
+  .btn-success {
+    background-color: #28a745;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btn-success:hover {
+    background-color: #218838;
+  }
+
+  .table td a {
+    margin-right: 5px;
+  }
+</style>
