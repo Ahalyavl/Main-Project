@@ -1,0 +1,87 @@
+{% include 'contractor_header.html' %}
+
+<div style="margin-bottom: 1em; background: url('/static/assets/img/inter.jpg'); height: 300px; width: 100%; background-size: cover;">
+</div>
+
+<center>
+	<form method="post" enctype="multipart/form-data">
+		<h3>Manage Design And Plan</h3>
+
+		{% if data['up'] %}
+		<!-- Update Section -->
+		<table class="table table-bordered">
+		
+			<tr>
+                <th>Design Details</th>
+                <td><input type="text" value="{{data['up'][0]['work_updation_details']}}" required name="details" class="form-control"></td>
+            </tr>
+            
+            <tr>
+                <th>Design Images</th>
+                <td>
+                    {% if data['up'][0]['path'] %}
+                        <!-- Display the existing image -->
+                        <img src="/{{data['up'][0]['work_updation_image']}}" width="100" height="100" alt="Design Image">
+                        <p>Current Image</p>
+                    {% endif %}
+                    <input type="file" name="image" class="form-control">
+                </td>
+            </tr>
+            
+			<tr>
+				<td colspan="2" align="center"><input type="submit" name="update" value="Upload" class="btn btn-info"></td>
+			</tr>
+		</table>
+
+		{% else %}
+		<!-- Create New Design Section -->
+		<table class="table table-bordered">
+			
+			<tr>
+				<th>Design Details</th>
+				<td><textarea required name="details" class="form-control"></textarea></td>
+			</tr>
+			
+			<tr>
+				<th>Work Percentage</th>
+				<td><input type="text" required name="percentage" class="form-control" pattern="^\d+$" title="Please enter only digits"></td>
+			</tr>
+			
+			<tr>
+				<th>Design Images</th>
+				<td><input type="file" required name="image" class="form-control"></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center"><input type="submit" name="submit" value="Upload" class="btn btn-info"></td>
+			</tr>
+		</table>
+		{% endif %}
+		<br>
+		<br>
+
+		<!-- Table showing existing designs -->
+		<table class="table table-bordered">
+			<tr>
+				<th>Index</th>
+				
+				<th> Details</th>
+				<th> Image</th>
+				<th></th>
+				<th></th>
+			</tr>
+			{% for i in data['view'] %}
+			<tr>
+				<td>{{loop.index}}</td>
+				<td>{{i['work_updation_details']}}</td>
+				<td><a href="/{{i['work_updation_image']}}"><img src="/{{i['work_updation_image']}}" width="100" height="100" alt="Designer Image"></a></td>
+				<!-- <td><a href="?action=update&des_id={{i['design_id']}}&img_id={{i['image_id']}}" class="btn btn-info">Update</a></td> -->
+				<td><a href="?action=delete&work_updation_id={{i['work_updation_id']}}&dr_id={{i['drequest_id']}}" class="btn btn-danger">Delete</a></td>
+			</tr>
+			{% endfor %}
+		</table>
+	</form>
+</center>
+
+
+
+{% include 'footer.html' %}
