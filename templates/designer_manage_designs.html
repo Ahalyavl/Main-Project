@@ -1,0 +1,237 @@
+{% include 'designer_header.html' %}
+
+<div style="margin-bottom: 1em; background: url('/static/assets/img/inter.jpg'); height: 300px; width: 100%; background-size: cover;">
+</div>
+
+<center>
+	<form method="post" enctype="multipart/form-data">
+		<h3>Manage Design And Plan</h3>
+
+		{% if data['up'] %}
+		<!-- Update Section -->
+		<table class="table table-bordered">
+			<tr>
+				<th>Category Name</th>
+				<td>
+					<select name="category_id" id="category_id" class="form-control" onchange="updateSubCategories()" {% if data['up'] %}  {% endif %}>
+						<option value="" disabled selected>Select a category</option>
+						{% for i in data['newview'] %}
+							<option value="{{i['category_id'] }}" {% if i['category_id'] == data['up'][0]['category_id'] %} selected {% endif %}>{{i['category_name']}}</option>
+						{% endfor %}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>Sub Category Name</th>
+				<td>
+					<select name="sub_category_id" id="sub_category_id" class="form-control">
+						<!-- Subcategory options will be loaded dynamically here -->
+                        {% for i in data['subnewview'] %}
+                        <option value="{{i['category_id'] }}" {% if i['category_id'] == data['up'][0]['category_id'] %} selected {% endif %}>{{i['subcategory_name']}}</option>
+                    {% endfor %}
+					</select>
+				</td>
+			</tr>
+
+            <tr>
+                <th>Select Color</th>
+                <td>
+                    <select name="color_id" id="color_id" class="form-control" required>
+                        <option value="" disabled selected>Select a color</option>
+                        {% for i in data['colorview'] %}
+                            <option value="{{i['color_id'] }}" {% if i['color_id'] == data['up'][0]['color_id'] %} selected {% endif %}>{{i['color_name']}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>Select Square Feet</th>
+                <td>
+                    <select name="square_feet_id" id="square_feet_id" class="form-control" required>
+                        <option value="" disabled selected>Select Square Feet</option>
+                        {% for i in data['square_feetview'] %}
+                            <option value="{{i['square_feet_id'] }}" {% if i['square_feet_id'] == data['up'][0]['square_feet_id'] %} selected {% endif %}>{{i['square_feets']}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            
+			<tr>
+				<th>Design Name</th>
+				<td><input type="text" required name="name" value="{{data['up'][0]['designname']}}" class="form-control"></td>
+			</tr>
+			<tr>
+				<th>Design Details</th>
+				<td><textarea name="details" class="form-control" required>{{data['up'][0]['details']}}</textarea></td>
+			</tr>
+			
+            
+            <tr>
+                <th>Design Images</th>
+                <td>
+                    {% if data['up'][0]['path'] %}
+                        <!-- Display the existing image -->
+                        <img src="/{{data['up'][0]['design_image']}}" width="100" height="100" alt="Design Image">
+                        <p>Current Image</p>
+                    {% endif %}
+                    <input type="file" name="image" class="form-control">
+                </td>
+            </tr>
+            
+			<tr>
+				<td colspan="2" align="center"><input type="submit" name="update" value="Upload" class="btn btn-info"></td>
+			</tr>
+		</table>
+
+		{% else %}
+		<!-- Create New Design Section -->
+		<table class="table table-bordered">
+			<tr>
+				<th>Service Name</th>
+				<td>
+					<select name="service_id" id="service_id" class="form-control" onchange="updateSubCategories()" required>
+						<option value="" disabled selected>Select a category</option>
+						{% for i in data['serviceview'] %}
+							<option value="{{i['service_id'] }}">{{i['service_name']}}</option>
+						{% endfor %}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>Category Name</th>
+				<td>
+					<select name="category_id" id="category_id" class="form-control" onchange="updateSubCategories()" required>
+						<option value="" disabled selected>Select a category</option>
+						{% for i in data['catview'] %}
+							<option value="{{i['category_id'] }}">{{i['category_name']}}</option>
+						{% endfor %}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>Sub Category Name</th>
+				<td>
+					<select name="sub_category_id" id="sub_category_id" class="form-control" required>
+						<!-- Subcategory options will be loaded dynamically here -->
+					</select>
+				</td>
+			</tr>
+            <tr>
+				<th>Select Color</th>
+				<td>
+					<select name="color_id" id="color_id" class="form-control" required>
+						<option value="" disabled selected>Select a color</option>
+						{% for i in data['colorview'] %}
+							<option value="{{i['color_id'] }}">{{i['color_name']}}</option>
+						{% endfor %}
+					</select>
+				</td>
+			</tr>
+            <tr>
+				<th>Select Color</th>
+				<td>
+					<select name="square_feet_id" id="square_feet_id" class="form-control" required>
+						<option value="" disabled selected>Select a Square feet</option>
+						{% for i in data['square_feetview'] %}
+							<option value="{{i['square_feet_id'] }}">{{i['square_feets']}}</option>
+						{% endfor %}
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>Design Name</th>
+				<td><input type="text" required name="name" class="form-control"></td>
+			</tr>
+			<tr>
+				<th>Design Details</th>
+				<td><textarea name="details" class="form-control" required></textarea></td>
+			</tr>
+			
+			<tr>
+				<th>Design Images</th>
+				<td><input type="file" required name="image" class="form-control"></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center"><input type="submit" name="submit" value="Upload" class="btn btn-info"></td>
+			</tr>
+		</table>
+		{% endif %}
+		<br>
+		<br>
+
+		<!-- Table showing existing designs -->
+		<table class="table table-bordered">
+			<tr>
+				<th>Index</th>
+				<th>Design Name</th>
+				<th>Design Details</th>
+				<th>Design Image</th>
+				<th></th>
+				<th></th>
+			</tr>
+			{% for i in data['view'] %}
+			<tr>
+				<td>{{loop.index}}</td>
+				<td>{{i['designname']}}</td>
+				<td>{{i['details']}}</td>
+				<td><a href="/{{i['design_image']}}"><img src="/{{i['design_image']}}" width="100" height="100" alt="Designer Image"></a></td>
+				<td><a href="?action=update&des_id={{i['design_id']}}&img_id={{i['image_id']}}" class="btn btn-info">Update</a></td>
+				<td><a href="?action=delete&des_id={{i['design_id']}}&img_id={{i['image_id']}}" class="btn btn-danger">Delete</a></td>
+			</tr>
+			{% endfor %}
+		</table>
+	</form>
+</center>
+
+<script>
+// JavaScript to update subcategories based on category selection
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("service_id").addEventListener("change", updateCategories);
+    document.getElementById("category_id").addEventListener("change", updateSubCategories);
+});
+
+function updateCategories() {
+    const serviceId = document.getElementById("service_id").value;
+    const categorySelect = document.getElementById("category_id");
+    const subCategorySelect = document.getElementById("sub_category_id");
+
+    if (!serviceId) return;
+
+    fetch(`get_categories?service_id=${serviceId}`)
+        .then(response => response.json())
+        .then(data => {
+            categorySelect.innerHTML = '<option value="" disabled selected>Select a category</option>';
+            subCategorySelect.innerHTML = '<option value="" disabled selected>Select a subcategory</option>'; // Reset subcategories
+
+            data.categories.forEach(category => {
+                const option = document.createElement("option");
+                option.value = category.category_id;
+                option.textContent = category.category_name;
+                categorySelect.appendChild(option);
+            });
+        });
+}
+
+function updateSubCategories() {
+    const categoryId = document.getElementById("category_id").value;
+    const subCategorySelect = document.getElementById("sub_category_id");
+
+    if (!categoryId) return;
+
+    fetch(`get_subcategories?category_id=${categoryId}`)
+        .then(response => response.json())
+        .then(data => {
+            subCategorySelect.innerHTML = '<option value="" disabled selected>Select a subcategory</option>';
+
+            data.subcategories.forEach(subcategory => {
+                const option = document.createElement("option");
+                option.value = subcategory.sub_category_id;
+                option.textContent = subcategory.subcategory_name;
+                subCategorySelect.appendChild(option);
+            });
+        });
+}
+
+</script>
+
+{% include 'footer.html' %}
